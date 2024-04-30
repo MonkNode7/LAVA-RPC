@@ -1,36 +1,138 @@
-# This is a basic workflow to help you get started with Actions
+name: Ethereum, NEAR, StarkNet, and Axelar Auto Commit
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  schedule:
+    - cron: '*/20 * * * *' # Runs every 20 minutes
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  workflow_dispatch: # Allows manual triggering from the GitHub UI
+
+permissions:
+  contents: write # Grants permissions to write to the repo
+
+env:
+  GIT_USER_EMAIL: monkmantap@gmail.com
+  GIT_USER_NAME:  MonkNode7
+
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  ethereum_auto_commit:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Pull latest changes
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          git pull origin master
+
+      - name: Run Ethereum script
+        run: |
+          chmod +x ethereum.sh
+          ./ethereum.sh
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Commit changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Ethereum network"
+
+      - name: Push changes
+        run: |
+          git push origin master
+
+  near_auto_commit:
+    runs-on: ubuntu-latest
+    needs: ethereum_auto_commit
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Pull latest changes
+        run: |
+          git pull origin master
+
+      - name: Run NEAR script
+        run: |
+          chmod +x near.sh
+          ./near.sh
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Commit changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') NEAR network"
+
+      - name: Push changes
+        run: |
+          git push origin master
+
+  starknet_auto_commit:
+    runs-on: ubuntu-latest
+    needs: near_auto_commit
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Pull latest changes
+        run: |
+          git pull origin master
+
+      - name: Run StarkNet script
+        run: |
+          chmod +x starknet.sh
+          ./starknet.sh
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Commit changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') StarkNet network"
+
+      - name: Push changes
+        run: |
+          git push origin master
+
+  axelar_auto_commit:
+    runs-on: ubuntu-latest
+    needs: starknet_auto_commit
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Pull latest changes
+        run: |
+          git pull origin master
+
+      - name: Run Axelar script
+        run: |
+          chmod +x axelar.sh
+          ./axelar.sh
+
+      - name: Configure Git identity
+        run: |
+          git config user.email "$GIT_USER_EMAIL"
+          git config user.name "$GIT_USER_NAME"
+
+      - name: Commit changes
+        run: |
+          git add -A
+          git commit -m "$(shuf -n1 -e "🔥 Hotfix" "✨ Feature" "🚀 Upgrade" "🛠️ Fix" "🔧 Refactor" "🔍 Investigate" "💡 Improve" "📦 Update" "📈 Optimize" "💬 Comment" | awk '{print $0}') Axelar network"
+
+      - name: Push changes
+        run: |
+          git push origin master
